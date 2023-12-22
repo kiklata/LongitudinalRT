@@ -1,7 +1,7 @@
 canonical_markers = {
     'Adipocyte' : ['ADIPOQ', 'FABP4', 'LEP'],
     'Endothelial' : ['VWF', 'CDH5', 'CLEC14A', 'CLDN5', 'ADGRL4'],
-    'Epithelial' : ['EPCAM', 'KRT19', 'KRT7', 'KRT8'],
+    'Epithelial' : ['EPCAM', 'KRT19', 'KRT7', 'KRT8','KRT5','KRT14'],
     'Fibroblast' : ['COL1A1', 'COL1A2', 'COL3A1', 'LUM'],
     'Neutrophil' : ['AZU1', 'CTSG', 'ELANE', 'MPO'],
     'Immune' : ['PTPRC'],
@@ -19,22 +19,21 @@ canonical_markers = {
     "ILC": ["ID2", "PLCG2", "GNLY", "SYNE1"],
     "Lymph prog": ["VPREB1","MME","EBF1","SSBP2","BACH2","CD79B",
         "IGHM","PAX5","PRKCE","DNTT","IGLL1",],
-    "Naive CD20+ B": ["MS4A1", "IL4R", "IGHD", "FCRL1", "IGHM"],
-    "B1 B": ["MS4A1","SSPN","ITGB1","EPHA4","COL4A4",
-        "PRDM1","IRF4", "CD38","XBP1","PAX5","BCL11A",
-        "BLK", "IGHD","IGHM","ZNF215",
-    ],  # Note IGHD and IGHM are negative markers
-    "Transitional B": ["MME", "CD38", "CD24", "ACSM3", "MSI2"],
-    "Plasma cells": ["MZB1", "HSP90B1", "FNDC3B", "PRDM1", "IGKC", "JCHAIN"],
-    "Plasmablast": ["XBP1", "RF4", "PRDM1", "PAX5"],  # Note PAX5 is a negative marker
-    "CD4+ T activated": ["CD4", "IL7R", "TRBC2", "ITGB1"],
-    "CD4+ T naive": ["CD4", "IL7R", "TRBC2", "CCR7"],
-    "CD8+ T": ["CD8A", "CD8B", "GZMK", "GZMA", "CCL5", "GZMB", "GZMH", "GZMA"],
-    "T activation": ["CD69", "CD38"],  # CD69 much better marker!
-    "T naive": ["LEF1", "CCR7", "TCF7"],
-    "pDC": ["GZMB", "IL3RA", "COBLL1", "TCF4"],
-    "G/M prog": ["MPO", "BCL2", "KCNQ5", "CSF3R"],
-    "HSC": ["NRIP1", "MECOM", "PROM1", "NKAIN2", "CD34"],
-    "MK/E prog": ["ZNF385D","ITGA2B","RYR3","PLCB1", ],  # Note PLCB1 is a negative marker
-
+#    "Naive CD20+ B": ["MS4A1", "IL4R", "IGHD", "FCRL1", "IGHM"],
+#    "B1 B": ["MS4A1","SSPN","ITGB1","EPHA4","COL4A4",
+#        "PRDM1","IRF4", "CD38","XBP1","PAX5","BCL11A",
+#        "BLK", "IGHD","IGHM","ZNF215",
+#    ],  # Note IGHD and IGHM are negative markers
+#    "Transitional B": ["MME", "CD38", "CD24", "ACSM3", "MSI2"],
+#    "Plasma cells": ["MZB1", "HSP90B1", "FNDC3B", "PRDM1", "IGKC", "JCHAIN"],
+#    "Plasmablast": ["XBP1", "RF4", "PRDM1", "PAX5"],  # Note PAX5 is a negative marker
+#    "CD4+ T activated": ["CD4", "IL7R", "TRBC2", "ITGB1"],
+#    "CD4+ T naive": ["CD4", "IL7R", "TRBC2", "CCR7"],
+#    "CD8+ T": ["CD8A", "CD8B", "GZMK", "GZMA", "CCL5", "GZMB", "GZMH", "GZMA"],
+#    "T activation": ["CD69", "CD38"],  # CD69 much better marker!
+#    "T naive": ["LEF1", "CCR7", "TCF7"],
+#    "pDC": ["GZMB", "IL3RA", "COBLL1", "TCF4"],
+#    "G/M prog": ["MPO", "BCL2", "KCNQ5", "CSF3R"],
+#    "HSC": ["NRIP1", "MECOM", "PROM1", "NKAIN2", "CD34"],
+#    "MK/E prog": ["ZNF385D","ITGA2B","RYR3","PLCB1", ],  # Note PLCB1 is a negative marker
 }

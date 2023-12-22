@@ -1,14 +1,15 @@
 obj_create = function(type,
                       datapath,
                       savepath,
-                      PatientID,
-                      NeoChemoRes,
-                      NeoRadRes,
-                      SampleID,
-                      SampleTimepoint,
-                      SampleMethod,
-                      SampleDate,
-                      Kit) {
+                      PatientID = NULL,
+                      NeoChemoRes = NULL,
+                      NeoRadRes = NULL,
+                      SampleID = NULL,
+                      SampleType = NULL,
+                      SampleTimepoint = NULL,
+                      SampleMethod = NULL,
+                      SampleDate = NULL,
+                      Kit = NULL) {
   
 
 # only for test -----------------------------------------------------------
@@ -50,9 +51,17 @@ obj_create = function(type,
       min.cells = 3,
       min.features = 200
     )
+  }else if(type == 'skin'){
+    count = Read10X(file.path(datapath, SampleID))
+    seu = CreateSeuratObject(
+      count,
+      project = SampleID,
+      min.cells = 3,
+      min.features = 200
+    )
   }
   
-  
+  if(type != 'skin'){
   seu$PatientID = PatientID
   seu$NeoChemoRes = NeoChemoRes
   seu$NeoRadRes = NeoRadRes
@@ -61,7 +70,13 @@ obj_create = function(type,
   seu$SampleMethod = SampleMethod
   seu$SampleDate = SampleDate
   seu$Kit = Kit
-  
+  }else {
+    seu$PatientID = PatientID
+    seu$SampleID = SampleID
+    seu$SampleType = SampleType
+    seu$SampleDate = SampleDate
+    seu$Kit = Kit
+  }
   
   # doublet detect ----------------------------------------------------------
   
@@ -97,6 +112,9 @@ obj_create = function(type,
   }else if(type == 'cellbender'){
     h5names = 'cellbender_doublet.h5ad'
     rdsnames = 'cellbender_doublet.rds'
+  }else if(type == 'skin'){
+    h5names = 'cellranger_doublet.h5ad'
+    rdsnames = 'cellranger_doublet.rds'
   }
   seu = DietSeurat(seu, layers = 'counts')
   convertSeu5Format(seu, savepaths = file.path(savepath, SampleID, 'raw',h5names))

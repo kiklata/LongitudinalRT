@@ -47,3 +47,59 @@ for(i in c('cellbender','cellranger','soupx')){
     Kit = 'sc5'
   )
 }
+
+
+obj_create(type = 'skin',
+           datapath = '/home/zhepan/Project/MultiOmics/data/skin',
+           savepath = '/home/zhepan/Project/MultiOmics/data/skin',
+           PatientID = 'P1002',
+           SampleID = 'SKIN-A1002',
+           SampleType = 'N',
+           SampleDate = '20230111',
+           Kit = 'sn3')
+
+obj_create(type = 'skin',
+           datapath = '/home/zhepan/Project/MultiOmics/data/skin',
+           savepath = '/home/zhepan/Project/MultiOmics/data/skin',
+           PatientID = 'P1002',
+           SampleID = 'SKIN-B1002',
+           SampleType = 'H',
+           SampleDate = '20230111',
+           Kit = 'sn3')
+
+obj_create(type = 'skin',
+           datapath = '/home/zhepan/Project/MultiOmics/data/skin',
+           savepath = '/home/zhepan/Project/MultiOmics/data/skin',
+           PatientID = 'P1007',
+           SampleID = 'SKIN-A1007',
+           SampleType = 'N',
+           SampleDate = '20230808',
+           Kit = 'sn3')
+
+obj_create(type = 'skin',
+           datapath = '/home/zhepan/Project/MultiOmics/data/skin',
+           savepath = '/home/zhepan/Project/MultiOmics/data/skin',
+           PatientID = 'P1007',
+           SampleID = 'SKIN-B1007',
+           SampleType = 'H',
+           SampleDate = '20230808',
+           Kit = 'sn3')
+
+
+obj_create(type = 'skin',
+           datapath = '/home/zhepan/Project/MultiOmics/data/skin',
+           savepath = '/home/zhepan/Project/MultiOmics/data/skin',
+           PatientID = 'P1009',
+           SampleID = 'SKIN-A1009',
+           SampleType = 'N',
+           SampleDate = '20230726',
+           Kit = 'sn3')
+
+obj_create(type = 'skin',
+           datapath = '/home/zhepan/Project/MultiOmics/data/skin',
+           savepath = '/home/zhepan/Project/MultiOmics/data/skin',
+           PatientID = 'P1009',
+           SampleID = 'SKIN-B1009',
+           SampleType = 'H',
+           SampleDate = '20230726',
+           Kit = 'sn3')
