@@ -90,7 +90,7 @@ obj_create = function(type,
   
   seu$percent_mt = PercentageFeatureSet(seu, pattern = '^MT-')
   seu$percent_hb=PercentageFeatureSet(seu, "^HB[^(P)]")
-  
+
   cyclegenes = read.delim('/home/zhepan/Reference/regev_lab_cell_cycle_genes.txt')
   seu <- NormalizeData(seu)
   
