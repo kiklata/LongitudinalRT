@@ -49,7 +49,7 @@ for(i in c('cellbender','cellranger','soupx')){
 }
 
 
-obj_create(type = 'skin',
+obj_create(project = 'skin',type = 'cellranger',
            datapath = '/home/zhepan/Project/MultiOmics/data/skin',
            savepath = '/home/zhepan/Project/MultiOmics/data/skin',
            PatientID = 'P1002',
@@ -58,7 +58,7 @@ obj_create(type = 'skin',
            SampleDate = '20230111',
            Kit = 'sn3')
 
-obj_create(type = 'skin',
+obj_create(project = 'skin',type = 'cellranger',
            datapath = '/home/zhepan/Project/MultiOmics/data/skin',
            savepath = '/home/zhepan/Project/MultiOmics/data/skin',
            PatientID = 'P1002',
@@ -67,7 +67,7 @@ obj_create(type = 'skin',
            SampleDate = '20230111',
            Kit = 'sn3')
 
-obj_create(type = 'skin',
+obj_create(project = 'skin',type = 'cellranger',
            datapath = '/home/zhepan/Project/MultiOmics/data/skin',
            savepath = '/home/zhepan/Project/MultiOmics/data/skin',
            PatientID = 'P1007',
@@ -76,7 +76,7 @@ obj_create(type = 'skin',
            SampleDate = '20230808',
            Kit = 'sn3')
 
-obj_create(type = 'skin',
+obj_create(project = 'skin',type = 'cellranger',
            datapath = '/home/zhepan/Project/MultiOmics/data/skin',
            savepath = '/home/zhepan/Project/MultiOmics/data/skin',
            PatientID = 'P1007',
@@ -86,7 +86,7 @@ obj_create(type = 'skin',
            Kit = 'sn3')
 
 
-obj_create(type = 'skin',
+obj_create(project = 'skin',type = 'cellranger',
            datapath = '/home/zhepan/Project/MultiOmics/data/skin',
            savepath = '/home/zhepan/Project/MultiOmics/data/skin',
            PatientID = 'P1009',
@@ -95,7 +95,7 @@ obj_create(type = 'skin',
            SampleDate = '20230726',
            Kit = 'sn3')
 
-obj_create(type = 'skin',
+obj_create(project = 'skin',type = 'cellranger',
            datapath = '/home/zhepan/Project/MultiOmics/data/skin',
            savepath = '/home/zhepan/Project/MultiOmics/data/skin',
            PatientID = 'P1009',

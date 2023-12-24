@@ -1,4 +1,5 @@
-obj_create = function(type,
+obj_create = function(project,
+                      type,
                       datapath,
                       savepath,
                       PatientID = NULL,
@@ -10,9 +11,7 @@ obj_create = function(type,
                       SampleMethod = NULL,
                       SampleDate = NULL,
                       Kit = NULL) {
-  
-
-# only for test -----------------------------------------------------------
+  # only for test -----------------------------------------------------------
   #datapath = '/home/zhepan/Project/MultiOmics/data/snRNA/Result'
   #savepath = '/home/zhepan/Project/MultiOmics/data/snRNA/Object'
   #PatientID = 'P1015'
@@ -33,49 +32,80 @@ obj_create = function(type,
   
   
   # load data ---------------------------------------------------------------
-  if(type =='cellranger'){
-    count = Read10X_h5(file.path(datapath, SampleID, 'filtered_feature_bc_matrix.h5'))  
-    seu = CreateSeuratObject(
-      count,
-      project = SampleID,
-      min.cells = 3,
-      min.features = 200
-      )
-  }else if(type == 'soupx'){
-    seu = readRDS(file.path(datapath, SampleID, 'soupx_output','soupx.rds'))
-  }else if(type == 'cellbender'){
-    count = scCustomize::Read_CellBender_h5_Mat(file.path(datapath, SampleID, 'cellbender_output','cellbender_feature_bc_matrix_filtered.h5'))
-    seu = CreateSeuratObject(
-      count,
-      project = SampleID,
-      min.cells = 3,
-      min.features = 200
-    )
-  }else if(type == 'skin'){
-    count = Read10X(file.path(datapath, SampleID))
-    seu = CreateSeuratObject(
-      count,
-      project = SampleID,
-      min.cells = 3,
-      min.features = 200
-    )
-  }
   
-  if(type != 'skin'){
-  seu$PatientID = PatientID
-  seu$NeoChemoRes = NeoChemoRes
-  seu$NeoRadRes = NeoRadRes
-  seu$SampleID = SampleID
-  seu$SampleTimepoint = SampleTimepoint
-  seu$SampleMethod = SampleMethod
-  seu$SampleDate = SampleDate
-  seu$Kit = Kit
-  }else {
+  
+  if (project == 'tumor') {
+    cellranger_path = file.path(datapath, SampleID, 'filtered_feature_bc_matrix.h5')
+    soupx_path = file.path(datapath, SampleID, 'soupx_output', 'soupx.rds')
+    cellbender_path = file.path(
+      datapath,
+      SampleID,
+      'cellbender_output',
+      'cellbender_feature_bc_matrix_filtered.h5'
+    )
+    
+    if (type == 'cellranger') {
+      count = Read10X_h5(cellranger_path)
+      seu = CreateSeuratObject(
+        count,
+        project = SampleID,
+        min.cells = 3,
+        min.features = 200
+      )
+    } else if (type == 'soupx') {
+      seu = readRDS(soupx_path)
+    } else if (type == 'cellbender') {
+      count = scCustomize::Read_CellBender_h5_Mat(cellbender_path)
+      seu = CreateSeuratObject(
+        count,
+        project = SampleID,
+        min.cells = 3,
+        min.features = 200
+      )
+    }
+    seu$PatientID = PatientID
+    seu$NeoChemoRes = NeoChemoRes
+    seu$NeoRadRes = NeoRadRes
+    seu$SampleID = SampleID
+    seu$SampleTimepoint = SampleTimepoint
+    seu$SampleMethod = SampleMethod
+    seu$SampleDate = SampleDate
+    seu$Kit = Kit
+    
+    
+  } else if (project == 'skin') {
+    cellranger_path = file.path(datapath, SampleID)
+    soupx_path = file.path(datapath, SampleID, 'soupx.rds')
+    cellbender_path = file.path(datapath,
+                                SampleID,
+                                'cellbender_feature_bc_matrix_filtered.h5')
+    
+    if (type == 'cellranger') {
+      count = Read10X(cellranger_path)
+      seu = CreateSeuratObject(
+        count,
+        project = SampleID,
+        min.cells = 3,
+        min.features = 200
+      )
+    } else if (type == 'soupx') {
+      seu = readRDS(soupx_path)
+    } else if (type == 'cellbender') {
+      count = scCustomize::Read_CellBender_h5_Mat(cellbender_path)
+      seu = CreateSeuratObject(
+        count,
+        project = SampleID,
+        min.cells = 3,
+        min.features = 200
+      )
+    }
     seu$PatientID = PatientID
     seu$SampleID = SampleID
     seu$SampleType = SampleType
     seu$SampleDate = SampleDate
     seu$Kit = Kit
+  } else{
+    stop("please specify project")
   }
   
   # doublet detect ----------------------------------------------------------
@@ -89,8 +119,9 @@ obj_create = function(type,
   # some qc info ------------------------------------------------------------
   
   seu$percent_mt = PercentageFeatureSet(seu, pattern = '^MT-')
-  seu$percent_hb=PercentageFeatureSet(seu, "^HB[^(P)]")
-
+  seu$percent_hb = PercentageFeatureSet(seu, pattern = "^HB[^(P)]")
+  seu$percent.rb <- PercentageFeatureSet(seu, pattern = "^RP[SL]")
+  
   cyclegenes = read.delim('/home/zhepan/Reference/regev_lab_cell_cycle_genes.txt')
   seu <- NormalizeData(seu)
   
@@ -100,25 +131,23 @@ obj_create = function(type,
   
   
   # convert to h5ad ---------------------------------------------------------
-  dir.create(path = file.path(savepath, SampleID,'raw'), recursive = T)
-  source("~/Project/MultiOmics/code/func/convertSeu5Format.R")  
-
-  if(type == 'cellranger'){
+  dir.create(path = file.path(savepath, SampleID, 'raw'),
+             recursive = T)
+  source("~/Project/MultiOmics/code/func/convertSeu5Format.R")
+  
+  if (type == 'cellranger') {
     h5names = 'cellranger_doublet.h5ad'
     rdsnames = 'cellranger_doublet.rds'
-  }else if(type == 'soupx'){
+  } else if (type == 'soupx') {
     h5names = 'soupx_doublet.h5ad'
     rdsnames = 'soupx_doublet.rds'
-  }else if(type == 'cellbender'){
+  } else if (type == 'cellbender') {
     h5names = 'cellbender_doublet.h5ad'
     rdsnames = 'cellbender_doublet.rds'
-  }else if(type == 'skin'){
-    h5names = 'cellranger_doublet.h5ad'
-    rdsnames = 'cellranger_doublet.rds'
   }
+  
   seu = DietSeurat(seu, layers = 'counts')
-  convertSeu5Format(seu, savepaths = file.path(savepath, SampleID, 'raw',h5names))
-  saveRDS(seu, file = file.path(savepath, SampleID, 'raw',rdsnames))
-
+  convertSeu5Format(seu, savepaths = file.path(savepath, SampleID, 'raw', h5names))
+  saveRDS(seu, file = file.path(savepath, SampleID, 'raw', rdsnames))
+  
 }
-
