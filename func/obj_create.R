@@ -37,6 +37,7 @@ obj_create = function(project,
   if (project == 'tumor') {
     cellranger_path = file.path(datapath, SampleID, 'filtered_feature_bc_matrix.h5')
     soupx_path = file.path(datapath, SampleID, 'soupx_output', 'soupx.rds')
+    decontx_path = file.path(datapath, SampleID, 'decontx_output', 'soupx.rds')
     cellbender_path = file.path(
       datapath,
       SampleID,
@@ -62,6 +63,8 @@ obj_create = function(project,
         min.cells = 3,
         min.features = 200
       )
+    } else if (type = 'decontx') {
+      seu = readRDS(decontx_path)
     }
     seu$PatientID = PatientID
     seu$NeoChemoRes = NeoChemoRes
@@ -79,6 +82,7 @@ obj_create = function(project,
     cellbender_path = file.path(datapath,
                                 SampleID,
                                 'cellbender_feature_bc_matrix_filtered.h5')
+    decontx_path = file.path(datapath, SampleID, 'soupx.rds')
     
     if (type == 'cellranger') {
       count = Read10X(cellranger_path)
@@ -98,6 +102,8 @@ obj_create = function(project,
         min.cells = 3,
         min.features = 200
       )
+    } else if (type = 'decontx') {
+      seu = readRDS(decontx_path)
     }
     seu$PatientID = PatientID
     seu$SampleID = SampleID
