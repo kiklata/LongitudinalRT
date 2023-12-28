@@ -34,7 +34,7 @@ limmstest = function(df,SampleTimepoint){
 
 diff = limmstest(df,'SampleTimepoint')
 
-meta_interest = c('Oxidative phosphorylation')
+meta_interest = c('Fatty acid degradation')
 
 ggplot(data = df,aes(x = SampleTimepoint, y = .data[[meta_interest]]))+
   geom_violin(aes(fill = SampleTimepoint),width = 0.7)+

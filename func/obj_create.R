@@ -37,7 +37,7 @@ obj_create = function(project,
   if (project == 'tumor') {
     cellranger_path = file.path(datapath, SampleID, 'filtered_feature_bc_matrix.h5')
     soupx_path = file.path(datapath, SampleID, 'soupx_output', 'soupx.rds')
-    decontx_path = file.path(datapath, SampleID, 'decontx_output', 'soupx.rds')
+    decontx_path = file.path(datapath, SampleID, 'decontx_output', 'decontx.rds')
     cellbender_path = file.path(
       datapath,
       SampleID,
@@ -63,7 +63,7 @@ obj_create = function(project,
         min.cells = 3,
         min.features = 200
       )
-    } else if (type = 'decontx') {
+    } else if (type == 'decontx') {
       seu = readRDS(decontx_path)
     }
     seu$PatientID = PatientID
@@ -77,12 +77,12 @@ obj_create = function(project,
     
     
   } else if (project == 'skin') {
-    cellranger_path = file.path(datapath, SampleID)
-    soupx_path = file.path(datapath, SampleID, 'soupx.rds')
+    cellranger_path = file.path(datapath, SampleID,'raw/filtered_feature_bc_matrix')
+    soupx_path = file.path(datapath, SampleID, 'raw/soupx.rds')
     cellbender_path = file.path(datapath,
                                 SampleID,
-                                'cellbender_feature_bc_matrix_filtered.h5')
-    decontx_path = file.path(datapath, SampleID, 'soupx.rds')
+                                'raw/cellbender_filtered.h5')
+    decontx_path = file.path(datapath, SampleID, 'raw/decontx.rds')
     
     if (type == 'cellranger') {
       count = Read10X(cellranger_path)
@@ -102,7 +102,7 @@ obj_create = function(project,
         min.cells = 3,
         min.features = 200
       )
-    } else if (type = 'decontx') {
+    } else if (type == 'decontx') {
       seu = readRDS(decontx_path)
     }
     seu$PatientID = PatientID
@@ -126,7 +126,7 @@ obj_create = function(project,
   
   seu$percent_mt = PercentageFeatureSet(seu, pattern = '^MT-')
   seu$percent_hb = PercentageFeatureSet(seu, pattern = "^HB[^(P)]")
-  seu$percent.rb <- PercentageFeatureSet(seu, pattern = "^RP[SL]")
+  seu$percent_rb = PercentageFeatureSet(seu, pattern = "^RP[SL]")
   
   cyclegenes = read.delim('/home/zhepan/Reference/regev_lab_cell_cycle_genes.txt')
   seu <- NormalizeData(seu)
@@ -137,7 +137,7 @@ obj_create = function(project,
   
   
   # convert to h5ad ---------------------------------------------------------
-  dir.create(path = file.path(savepath, SampleID, 'raw'),
+  dir.create(path = file.path(savepath, SampleID, 'object'),
              recursive = T)
   source("~/Project/MultiOmics/code/func/convertSeu5Format.R")
   
@@ -150,10 +150,13 @@ obj_create = function(project,
   } else if (type == 'cellbender') {
     h5names = 'cellbender_doublet.h5ad'
     rdsnames = 'cellbender_doublet.rds'
-  }
+  } else if (type == 'decontx') {
+    h5names = 'decontx_doublet.h5ad'
+    rdsnames = 'decontx_doublet.rds'
+  } 
   
   seu = DietSeurat(seu, layers = 'counts')
-  convertSeu5Format(seu, savepaths = file.path(savepath, SampleID, 'raw', h5names))
-  saveRDS(seu, file = file.path(savepath, SampleID, 'raw', rdsnames))
+  convertSeu5Format(seu, savepaths = file.path(savepath, SampleID, 'object', h5names))
+  saveRDS(seu, file = file.path(savepath, SampleID, 'object', rdsnames))
   
 }
