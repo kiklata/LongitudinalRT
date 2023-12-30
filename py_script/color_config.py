@@ -1,11 +1,11 @@
 # celltype color
-celltype_major_color_pal = {
+tumor_celltype_major_color_pal = {
     'Immune': {'min': 0, 'max': 255},
     'Stromal': {'min': 0, 'max': 255},
     'Epiethelial': {'min': 0, 'max': 255}
 }
 
-celltype_minor_color_pat = {
+tumor_celltype_minor_color_pat = {
     'B cell' : "#A6CEE3", 
     "T cell" : "#99CD91", 
     "Endothelial" : "#B89B74",
@@ -17,7 +17,7 @@ celltype_minor_color_pat = {
     "CAF" : "#B15928"
 }
 
-celltype_subset_color_pal = {
+tumor_celltype_subset_color_pal = {
     'B cell':"#A6CEE3", 
     'CD4-Tn-IL7R': "#009392", 'CD4-Treg-FOXP3':"#39B185", 
     "CD8-Tem":"#9CCB86", "CD8-Trm-ZNF683":"#E9E29C","CD8-Tex-ITM2C":"#EEB479", "CD8-Tex-DUSP2":"#E88471", 
@@ -34,13 +34,20 @@ celltype_subset_color_pal = {
 }
 
 # sampleID color 
-SampleID_color_pal = {
+tumor_SampleID_color_pal = {
     'red': {'min': 0, 'max': 255},
     'green': {'min': 0, 'max': 255},
     'blue': {'min': 0, 'max': 255}
 }
 
-SampleTimepoint_color_pal = {
+tumor_SampleTimepoint_color_pal = {
     'S1': '#dbe4c7',
     'S2': '#be7b92'
 }
+
+skin_cl_major_color_pal = {}
+skin_cl_minor_color_pal = {}
+skin_cl_subset_color_pal = {}
+
+skin_SampleID_color_pal = {}
+skin_SampleType_color_pal = {}
