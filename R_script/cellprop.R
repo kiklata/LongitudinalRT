@@ -1,6 +1,8 @@
-anno <- read.delim("~/Project/MultiOmics/data/snRNA/Object/summary/annotation/cellranger_filter_anno.tsv", row.names=1)
+anno = read.delim('~/Project/MultiOmics/data/skin/res/cellbender_celltype.csv',row.names = 1,sep = ',')
 
-ptexpan = as.data.frame(table(anno$SampleID,anno$manual_celltype_annotation))
+anno = dplyr::filter(anno, cl_major == 'Keratinocyte')
+
+ptexpan = as.data.frame(table(anno$SampleID,anno$cl_subset))
 ptexpan = tidyr::spread(ptexpan,key = 'Var2',value = 'Freq')
 ptexpan$total = apply(ptexpan[,2:ncol(ptexpan)],1,sum)
 
@@ -8,17 +10,20 @@ for (h in 2:(ncol(ptexpan)-1)) {
   ptexpan[,h] = ptexpan[,h]/ptexpan$total
 }
 
-pttimepoint = as.data.frame(table(anno$SampleID,anno$SampleTimepoint))
+pttimepoint = as.data.frame(table(anno$SampleID,anno$SampleType))
 pttimepoint = tidyr::spread(pttimepoint,key = 'Var2',value = 'Freq')
-pttimepoint$type = if_else(pttimepoint$S1!=0,'pre','post')
+pttimepoint$type = if_else(pttimepoint$H!=0,'ARD','Normal')
 
 ptexpan$type = pttimepoint$type
-ptexpan$pair = c('a','b','b')
+ptexpan$pair = c('a','b','c','a','b','c')
 
 
-ptexpan$type = factor(ptexpan$type,levels = c('pre','post'))
+ptexpan$type = factor(ptexpan$type,levels = c('Normal','ARD'))
 
-celltype_list = c('B cell','Endothelial','Epithelial','CAF','Myeloid','Mast','PVL','T cell')
+celltype_list = c("KC-Basal-COL17A1","KC-Basal-ITGA6", "KC-Suprabasal-DSC3" ,    
+                  "KC-Suprabasal-KRT6A","KC-Suprabasal-LYPD3","KC-Suprabasal-PLD1",
+                  "KC-Spinous-AZGP1","KC-Spinous-SPINK5",           
+                  "KC-Proliferating-DIAPH3","KC-Cycling" )
 
 plist = list()
 
@@ -29,14 +34,24 @@ for (i in celltype_list) {
       geom_point()+
       geom_line(aes(group = pair), color = 'lightgrey')+
       labs(title = i, y = "Frequence", x = "")+
-      theme_bw()+theme(plot.title = element_text(hjust = 0.5),
-                   panel.grid = element_blank(),
-                   axis.text.x = element_text(angle = 0,vjust = 0.5,hjust = 0.7),
-                   axis.title.y = element_text(size = 4),
-                   panel.border = element_blank(), axis.line = element_line(colour = 'black'),
-                   axis.text = element_text(colour = 'black'))
+      theme_bw()+
+      theme(plot.title = element_text(size = 8,hjust = 0.5),
+            panel.grid = element_blank(),
+            axis.text.x = element_text(size = 4,angle = 0,vjust = 0.5,hjust = 0.7),
+            axis.text.y = element_text(size = 4),
+            axis.title = element_text(size = 6),
+            panel.border = element_blank(), axis.line = element_line(colour = 'black'),
+            axis.text = element_text(colour = 'black'))
 }
-p = (plist[['T cell']]+plist[['B cell']]+plist[['Myeloid']]+plist[['Mast']])|(plist[['Epithelial']]+plist[['Endothelial']]+plist[['CAF']]+plist[['PVL']])
+for (i in celltype_list) {
+  ggsave(filename = paste0(i,'_line.png'),plist[[i]],width = 1.82,height = 1.36,dpi = 300)
+}
+
+library(patchwork)
+#p = 
+  ((plist[['T cell']]+plist[['Myeloid']]+plist[['Mast cell']]+plist[['Keratinocyte']]+plist[['Eccrine gland']])+plot_layout(ncol = 5))/
+  ((plist[['Melanocyte']]+plist[['Endothelial']]+plist[['PVL']]+plist[['Fibroblast']]+plist[['Schwann']])+plot_layout(ncol = 5))
+
 ggsave('porpchange.png',p,width = 8,height = 2.8)
 
 
@@ -74,13 +89,15 @@ for (i in celltype_list) {
     geom_boxplot(aes(color = .data[['type']],fill = .data[['type']]))+
     scale_color_manual(values = c('#aab19a','#8b596a'))+
     scale_fill_manual(values = c('#dbe4c7','#be7b92'))+
-    stat_compare_means(comparisons = list(c('pre','post')),
+    stat_compare_means(comparisons = list(c('Normal','ARD')),
                        method = "wilcox.test",
-                       label = "p.format",tip.length = 0,size = 2,lwd = 0.5)+
+                       label = "p.signif",tip.length = 0,size = 2,lwd = 0.5)+
                        
     labs(caption = i, y = "Frequence", x = "")+
     theme_bw()+theme(plot.caption = element_text(hjust=0.5, size=8,),
                      panel.grid = element_blank(),
+                     axis.text.y = element_text(size = 4),
+                     axis.title.y = element_text(size = 6),
                      axis.text.x = element_blank(),legend.title = element_blank(),axis.ticks.x = element_blank(),
                      panel.border = element_blank(), axis.line = element_line(colour = 'black'),
                      axis.text = element_text(colour = 'black'),
@@ -88,6 +105,9 @@ for (i in celltype_list) {
 }
 p = (plist[['CD4-Tn-IL7R']]+plist[['CD4-Treg-FOXP3']]+plist[['CD8-Tem']]+plist[['CD8-Tex-DUSP2']]+plist[['CD8-Tex-ITM2C']]+plist[['CD8-Trm-ZNF683']])+
   plot_layout(widths = c(1,1,1,1,1,1), guides = 'collect')
+for (i in celltype_list) {
+  ggsave(filename = paste0(i,'_box.png'),plist[[i]],width = 1.8,height = 1.70,dpi = 300)
+}
 
 
 # myeloid -------------------------------------------------------------------

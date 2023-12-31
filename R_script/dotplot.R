@@ -1,11 +1,4 @@
-seu <- readRDS("~/Project/MultiOmics/data/skin/res/cellbender_anno_count.rds")
-
-plan('sequential')
-seu = seu %>% NormalizeData() %>% ScaleData()
-
-Idents(seu) = seu$cl_minor
-plan('multisession', workers = 8)
-markers = FindAllMarkers(seu, test.use = 'wilcox')
+markers <- readRDS("~/Project/MultiOmics/data/skin/res/cellbender_cl_minor_marker.rds")
 
 topmarker = markers %>% group_by(cluster) %>% top_n(20,avg_log2FC)
 
@@ -62,7 +55,7 @@ p1 =
   p$theme+
   theme(plot.background = element_rect(fill = "white"),
         plot.margin = unit(c(0.25,0,0.25,1), "cm"), 
-        panel.border = panel.border <- element_rect(fill = NA, color = "black", size = 0.7),
+        panel.border = element_rect(fill = NA, color = "black", size = 0.7),
         aspect.ratio = 2.4,
         legend.title = element_text(size = 10),
         legend.text = element_text(size = 8),
