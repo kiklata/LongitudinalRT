@@ -20,3 +20,5 @@ for(i in c('T cell','Myeloid','Endothelial','Keratinocyte','Fibroblast')){
 }
 
 
+saveRDS(marker_list, file = 'cellbender_cl_subset_marker.rds')
+saveRDS(top_m_list, file = 'cellbender_cl_subset_topmarker.rds')
