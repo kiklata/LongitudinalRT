@@ -20,19 +20,19 @@ def CreateLoom(h5adpath,loompath):
     lp.create( EXP_FILTER_LOOM_FNAME, adata.X.transpose(), row_attrs, col_attrs)
 
 
-dataPath = '/home/shpc_100839/scRNA_BC_metastases/Data/integrate_sc_BC/tumor/h5ad/filter_NG/'
-RESULTS_FOLDERNAME = "/home/zhepan/scRNA_BC_metastases/Data/integrate_sc_BC/tumor/SCENIC/"
+dataPath = '/home/zhepan/Project/MultiOmics/data/skin/res/'
+RESULTS_FOLDERNAME = "/home/zhepan/Project/MultiOmics/data/skin/res/SCENIC"
 
-SAMPLE_ID = 'tumor'
+SAMPLE_ID = 'cellbender_Keratinocyte_count'
 
-EXP_FILTER_LOOM_FNAME = os.path.join(RESULTS_FOLDERNAME, '{}.filter.loom'.format(SAMPLE_ID))
+EXP_FILTER_LOOM_FNAME = os.path.join(RESULTS_FOLDERNAME, '{}.loom'.format(SAMPLE_ID))
 expath = os.path.join(dataPath,'{}.h5ad'.format(SAMPLE_ID))
 
 CreateLoom(h5adpath = expath, loompath = EXP_FILTER_LOOM_FNAME)
 
 # step 1
 
-AUXILLIARIES_FOLDERNAME = "/home/zhepan/software/SCENICdata/"
+AUXILLIARIES_FOLDERNAME = "/home/zhepan/Reference/SCENIC/"
 
 RANKING_DBS_FNAMES = os.path.join(AUXILLIARIES_FOLDERNAME,'hg38_500bp_up_100bp_down_full_tx_v10_clust.genes_vs_motifs.rankings.feather')
 MOTIF_ANNOTATIONS_FNAME = os.path.join(AUXILLIARIES_FOLDERNAME, 'motifs-v10nr_clust-nr.hgnc-m0.001-o0.0.tbl')

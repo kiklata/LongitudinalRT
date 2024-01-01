@@ -1,6 +1,6 @@
-run.gsea = function(marker,cluster,gmt = '/home/zhepan/Reference/KEGG_metabolism_nc.gmt',method){
+run.gsea = function(marker,clusters,gmt,method){
   
-  meta = marker %>% dplyr::filter(.,group1 == cluster)
+  meta = marker %>% dplyr::filter(.,cluster == clusters)
   meta = meta %>% arrange(desc(avg_log2FC))
   meta = meta[,c('gene','avg_log2FC')]
   rank = tibble::deframe(meta)    

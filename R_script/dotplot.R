@@ -1,6 +1,6 @@
 markers <- readRDS("~/Project/MultiOmics/data/skin/res/cellbender_cl_minor_marker.rds")
 seu <- readRDS("~/Project/MultiOmics/data/skin/res/cellbender_anno_count.rds")
-
+source("~/Project/MultiOmics/code/func/dotplot_config.R")
 seu = seu %>% NormalizeData() %>% ScaleData()
 
 topmarker = markers %>% group_by(cluster) %>% top_n(20,avg_log2FC)

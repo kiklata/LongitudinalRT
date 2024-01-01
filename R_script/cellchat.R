@@ -1,16 +1,16 @@
 library(CellChat)
 
-cellranger_filter_count <- readRDS("~/Project/MultiOmics/data/snRNA/Object/summary/cellranger_filter_count.rds")
-anno <- read.delim("~/Project/MultiOmics/data/snRNA/Object/summary/annotation/cellranger_filter_anno.tsv", row.names=1)
+cellranger_filter_count <- readRDS("~/Project/MultiOmics/data/skin/res/cellbender_anno_count.rds")
+#anno <- read.delim("~/Project/MultiOmics/data/snRNA/Object/summary/annotation/cellranger_filter_anno.tsv", row.names=1)
 
-seu = AddMetaData(cellranger_filter_count,anno)
-seu = seu %>% NormalizeData(.)
+#seu = AddMetaData(cellranger_filter_count,anno)
+seu = cellranger_filter_count %>% NormalizeData(.)
 
-select_cellmajor = c('CAF','Myeloid','T cell')
-input_seu = seu %>% subset(., celltype_major_order %in% select_cellmajor)
+select_cellmajor = c('Fibroblast','Keratinocyte','T cell','Myeloid','Endothelial')
+input_seu = seu %>% subset(., cl_major %in% select_cellmajor)
 
-callcellchat = function(seu,timepoint,cluster = 'celltype_minor_order',ncore = 8){
-  input_seu = subset(input_seu, SampleTimepoint == timepoint)
+callcellchat = function(seu,type,cluster = 'cl_subset',ncore = 8){
+  input_seu = subset(seu, SampleType == type)
   data_input <- GetAssayData(input_seu,assay = "RNA", layer = "data")
   cellchat <- createCellChat(object = data_input, meta = input_seu@meta.data, group.by = cluster)
   cellchat@DB <- CellChatDB.human
@@ -27,8 +27,8 @@ callcellchat = function(seu,timepoint,cluster = 'celltype_minor_order',ncore = 8
   return(cellchat)
 }
 
-cellchat_pre = callcellchat(input_seu, timepoint = 'S1')
-cellchat_post = callcellchat(input_seu, timepoint = 'S2')
+cellchat_H = callcellchat(seu = input_seu, type = 'H')
+cellchat_N = callcellchat(seu = input_seu, timepoint = 'N')
 
 #Calculate the aggregated cell-cell communication network
 cellchat <- mergeCellChat(list(cellchat_pre,cellchat_post), add.names = c('pre','post'))

@@ -22,3 +22,9 @@ for(i in c('T cell','Myeloid','Endothelial','Keratinocyte','Fibroblast')){
 
 saveRDS(marker_list, file = 'cellbender_cl_subset_marker.rds')
 saveRDS(top_m_list, file = 'cellbender_cl_subset_topmarker.rds')
+
+
+seu_sub = seu %>% subset(.,cl_major == 'Keratinocyte')
+seu_sub = seu_sub %>% NormalizeData() %>% ScaleData()
+Idents(seu_sub) = seu_sub$SampleType
+markers = FindAllMarkers(seu_sub, test.use = 'wilcox')
