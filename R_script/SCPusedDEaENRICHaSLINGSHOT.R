@@ -32,47 +32,5 @@ VolcanoPlot(srt = cd4t_sub)+labs(title = 'CD4-Treg-FOXP3')+voltheme
 VolcanoPlot(srt = cd8t_sub)+labs(title = 'CD8-Trm-ZNF683')+voltheme
 
 
-# enrichment --------------------------------------------------------------
-cd8t_major <- RunDEtest(srt = new_tcell %>% subset(.,Tcell_major == 'CD8-T'), group_by = "SampleTimepoint", 
-                      fc.threshold = 1, only.pos = FALSE)
-
-deg = cd8t_major@tools$DEtest_SampleTimepoint$AllMarkers_wilcox
-
-
-
-# slingshot ---------------------------------------------------------------
-
-new_tcell@reductions = tcell_cluster@reductions
-cd4 = subset(new_tcell, Tcell_major == 'CD4-T')
-
-tcd4cell_maj <- RunSlingshot(srt = cd4, group.by = "Tcell_minor", reduction = "UMAP")
-
-FeatureDimPlot(tcd4cell_maj, features = paste0("Lineage", 1), reduction = "UMAP", theme_use = "theme_blank")
-CellDimPlot(tcd4cell_maj, group.by = "Tcell_minor", reduction = "UMAP", lineages = paste0("Lineage", 1))+ labs(title = '',caption = '')
-  +theme(legend.position = 'bottom')
-
-
-tcd4cell_maj[["RNA3"]] <- as(object = tcd4cell_maj[["RNA"]], Class = "Assay")
-DefaultAssay(tcd4cell_maj) <- "RNA3"
-tcd4cell_maj[["RNA"]] <- NULL
-tcd4cell_maj <- RenameAssays(object = tcd4cell_maj, RNA3 = 'RNA')
-
-tcd4cell_maj <- RunDynamicFeatures(srt = tcd4cell_maj, lineages = c("Lineage1"), n_candidates = 200)
-
-ht <- DynamicHeatmap(
-  srt = tcd4cell_maj, lineages = c("Lineage1"),feature_split_by = 'Lineage1',
-  use_fitted = TRUE, n_split = 6, reverse_ht = "Lineage1", 
-  heatmap_palette = "viridis", cell_annotation = "Tcell_minor",
-  pseudotime_label = 25, pseudotime_label_color = "red",
-  height = 5, width = 2
-)
-print(ht$plot)
-
-DynamicPlot(
-  srt = tcd4cell_maj, lineages = c("Lineage1"), group.by = "Tcell_minor",
-  features = c("FOXP3",'IL7R'),
-  compare_lineages = TRUE, compare_features = FALSE
-)
-
 
 # myeloid -----------------------------------------------------------------

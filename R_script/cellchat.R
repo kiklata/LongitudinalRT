@@ -11,6 +11,7 @@ input_seu = seu %>% subset(., cl_major %in% select_cellmajor)
 
 callcellchat = function(seu,type,cluster = 'cl_subset',ncore = 8){
   input_seu = subset(seu, SampleType == type)
+  input_seu$cl_subset = droplevels(input_seu$cl_subset)
   data_input <- GetAssayData(input_seu,assay = "RNA", layer = "data")
   cellchat <- createCellChat(object = data_input, meta = input_seu@meta.data, group.by = cluster)
   cellchat@DB <- CellChatDB.human
@@ -31,9 +32,9 @@ cellchat_H = callcellchat(seu = input_seu, type = 'H')
 cellchat_N = callcellchat(seu = input_seu, timepoint = 'N')
 
 #Calculate the aggregated cell-cell communication network
-cellchat <- mergeCellChat(list(cellchat_pre,cellchat_post), add.names = c('pre','post'))
+#cellchat <- mergeCellChat(list(cellchat_H,cellchat_N), add.names = c('ARD','Normal'))
 
-object.list = list(pre = cellchat_pre, post = cellchat_post)
+object.list = list(ARD = cellchat_H, Normal = cellchat_N)
 
 num.link <- sapply(object.list, function(x) {rowSums(x@net$count) + colSums(x@net$count)-diag(x@net$count)})
 weight.MinMax <- c(min(num.link), max(num.link)) # control the dot size in the different datasets
@@ -45,30 +46,35 @@ for (i in 1:length(object.list)) {
 #> Signaling role analysis on the aggregated cell-cell communication network from all signaling pathways
 patchwork::wrap_plots(plots = gg)
 
-netVisual_bubble(object.list[[1]], sources.use = c(6), targets.use = c(9,13), remove.isolate = FALSE)
-netVisual_chord_gene(object.list[[1]], sources.use = c(6), targets.use = c(9,13), lab.cex = 0.5,legend.pos.y = 30)
-netVisual_circle(object.list[[1]]@net$count,sources.use = c(6),targets.use = c(9,13), weight.scale = T)
+netVisual_bubble(object.list[[1]])
+
+pt_source =  c(4,7,9,10,13)
+pt_target = c(14,15,23)
+
+netVisual_bubble(object.list[[1]], sources.use = pt_source, targets.use = pt_target, remove.isolate = FALSE)+coord_flip()
+#netVisual_chord_gene(object.list[[1]], sources.use = c(4,7,9,10,13), targets.use = c(14:15,23), lab.cex = 0.5,legend.pos.y = 30)
+#netVisual_circle(object.list[[1]]@net$count,sources.use = c(4,7,9,10,13),targets.use = c(14:15,23), weight.scale = T)
 
 
-pathways.show <- c("CXCL") 
+pathways.show <- c("TGFb") 
 netVisual_aggregate(object.list[[1]], signaling = pathways.show, layout = "circle")
-netVisual_aggregate(object.list[[1]], signaling = pathways.show,sources.use = c(6),targets.use = c(9,13), layout = "chord")
-netVisual_heatmap(object.list[[1]], signaling = pathways.show, sources.use = c(1:6),targets.use = c(9,13),color.heatmap = "Reds")
+
+netVisual_aggregate(object.list[[1]], signaling = pathways.show,sources.use = pt_source,targets.use = pt_target, layout = "chord")
+netVisual_heatmap(object.list[[1]], signaling = pathways.show, sources.use = pt_source,targets.use = pt_target,color.heatmap = "Reds")
 
 pairLR.CXCL <- extractEnrichedLR(object.list[[1]], signaling = pathways.show, geneLR.return = FALSE)
 LR.show <- pairLR.CXCL[1,]
 netVisual_individual(object.list[[1]], signaling = pathways.show, pairLR.use = LR.show, layout = "circle")
 
-cellchat <- netAnalysis_computeCentrality(object.list[[1]], slot.name = "netP") 
-netAnalysis_signalingRole_network(cellchat,signaling = pathways.show, width = 8, height = 2.5, font.size = 10)
+netAnalysis_signalingRole_network(object.list[[1]],signaling = pathways.show, width = 8, height = 2.5, font.size = 10)
 
-netAnalysis_signalingRole_scatter(cellchat_pre)|netAnalysis_signalingRole_scatter(cellchat_post)
+netAnalysis_signalingRole_scatter(object.list[[1]])|netAnalysis_signalingRole_scatter(object.list[[2]])
 
 
-groupSize <- as.numeric(table(cellchat@idents))
+groupSize <- as.numeric(table(object.list[[1]]@idents))
 
-netVisual_circle(cellchat@net$count, vertex.weight = groupSize, weight.scale = T, label.edge= F, title.name = "Number of interactions",idents.use = c('Macrophage-TREM2'))
-netVisual_circle(cellchat@net$weight, vertex.weight = groupSize, weight.scale = T, label.edge= F, title.name = "Interaction weights/strength",idents.use = c('Macrophage-TREM2'))
+netVisual_circle(object.list[[1]]@net$count, vertex.weight = groupSize, weight.scale = T, label.edge= F, title.name = "Number of interactions",idents.use = c('Macrophage-TREM2'))
+netVisual_circle(object.list[[1]]@net$weight, vertex.weight = groupSize, weight.scale = T, label.edge= F, title.name = "Interaction weights/strength",idents.use = c('Macrophage-TREM2'))
 
 #Visualize each signaling pathway using Hierarchy plot, Circle plot or Chord diagram
 

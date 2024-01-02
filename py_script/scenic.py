@@ -28,7 +28,7 @@ SAMPLE_ID = 'cellbender_Keratinocyte_count'
 EXP_FILTER_LOOM_FNAME = os.path.join(RESULTS_FOLDERNAME, '{}.loom'.format(SAMPLE_ID))
 expath = os.path.join(dataPath,'{}.h5ad'.format(SAMPLE_ID))
 
-CreateLoom(h5adpath = expath, loompath = EXP_FILTER_LOOM_FNAME)
+#CreateLoom(h5adpath = expath, loompath = EXP_FILTER_LOOM_FNAME)
 
 # step 1
 
@@ -60,6 +60,9 @@ os.system("pyscenic ctx %s %s \
 
 
 # step 4
+AUCELL_LOOM_FNAME = os.path.join(RESULTS_FOLDERNAME, '{}.aucell.csv'.format(SAMPLE_ID))
+
+
 os.system("pyscenic aucell %s %s \
     --output %s \
     --num_workers 8" %(EXP_FILTER_LOOM_FNAME,MOTIFS_FNAME,AUCELL_LOOM_FNAME))
