@@ -3,13 +3,10 @@ obj_create = function(project,
                       datapath,
                       savepath,
                       PatientID = NULL,
-                      NeoChemoRes = NULL,
-                      NeoRadRes = NULL,
                       SampleID = NULL,
                       SampleType = NULL,
                       SampleTimepoint = NULL,
                       SampleMethod = NULL,
-                      SampleDate = NULL,
                       Kit = NULL) {
   # only for test -----------------------------------------------------------
   #datapath = '/home/zhepan/Project/MultiOmics/data/snRNA/Result'
@@ -36,8 +33,8 @@ obj_create = function(project,
   
   if (project == 'tumor') {
     cellranger_path = file.path(datapath, SampleID, 'filtered_feature_bc_matrix.h5')
-    soupx_path = file.path(datapath, SampleID, 'soupx_output', 'soupx.rds')
-    decontx_path = file.path(datapath, SampleID, 'decontx_output', 'decontx.rds')
+    soupx_path = file.path(datapath, SampleID, 'soupx.rds')
+    decontx_path = file.path(datapath, SampleID, 'decontx.rds')
     cellbender_path = file.path(
       datapath,
       SampleID,
@@ -67,12 +64,9 @@ obj_create = function(project,
       seu = readRDS(decontx_path)
     }
     seu$PatientID = PatientID
-    seu$NeoChemoRes = NeoChemoRes
-    seu$NeoRadRes = NeoRadRes
     seu$SampleID = SampleID
     seu$SampleTimepoint = SampleTimepoint
     seu$SampleMethod = SampleMethod
-    seu$SampleDate = SampleDate
     seu$Kit = Kit
     
     
@@ -128,7 +122,7 @@ obj_create = function(project,
   seu$percent_hb = PercentageFeatureSet(seu, pattern = "^HB[^(P)]")
   seu$percent_rb = PercentageFeatureSet(seu, pattern = "^RP[SL]")
   
-  cyclegenes = read.delim('/home/zhepan/Reference/regev_lab_cell_cycle_genes.txt')
+  cyclegenes = read.delim('/home/zhepan/Reference/regev_lab_cell_cycle_genes.txt',header = F)
   seu <- NormalizeData(seu)
   
   seu = CellCycleScoring(seu, s.features = cyclegenes[1:42, 1], g2m.features = cyclegenes[43:96, 1])
@@ -137,9 +131,9 @@ obj_create = function(project,
   
   
   # convert to h5ad ---------------------------------------------------------
-  dir.create(path = file.path(savepath, SampleID, 'object'),
-             recursive = T)
-  source("~/Project/MultiOmics/code/func/convertSeu5Format.R")
+  if(!dir.exists(paths = file.path(savepath, SampleID,'raw'))){
+    dir.create(path = file.path(savepath, SampleID,'raw'),recursive = T)}
+  else {NULL}
   
   if (type == 'cellranger') {
     h5names = 'cellranger_doublet.h5ad'
@@ -155,8 +149,8 @@ obj_create = function(project,
     rdsnames = 'decontx_doublet.rds'
   } 
   
-  seu = DietSeurat(seu, layers = 'counts')
-  convertSeu5Format(seu, savepaths = file.path(savepath, SampleID, 'object', h5names))
-  saveRDS(seu, file = file.path(savepath, SampleID, 'object', rdsnames))
+  DietSeurat(seu,counts = TRUE,data = TRUE,scale.data = FALSE)
+  sceasy::convertFormat(seu, from="seurat", to="anndata",outFile = file.path(savepath, SampleID, 'raw', h5names), drop_single_values = F, main_layer = 'counts')
+  saveRDS(seu, file = file.path(savepath, SampleID, 'raw', rdsnames))
   
 }

@@ -1,0 +1,3 @@
+bypy upload ~/Project/MultiOmics/data/tumor/scRNA/Rawdata/P1024S2 LongitudinalRT/P1024S2
+bypy upload ~/Project/MultiOmics/data/tumor/scImm/BCR/P1024S2 LongitudinalRT/P1024S2
+bypy upload ~/Project/MultiOmics/data/tumor/scImm/TCR/P1024S2 LongitudinalRT/P1024S2

@@ -16,6 +16,24 @@ source('/home/zhepan/Project/MultiOmics/code/func/obj_create.R')
 #)
 #}
 
+for (i in c( 'cellranger','soupx','decontx')) {
+
+obj_create(
+  project = 'tumor',
+  type = i,
+  datapath = '/home/zhepan/Project/MultiOmics/data/tumor/scRNA/Result',
+  savepath = '/home/zhepan/Project/MultiOmics/data/tumor/scRNA/Object',
+  PatientID = 'P1024',
+  SampleID = 'P1024S2',
+  SampleTimepoint = 'S2',
+  SampleMethod = 'surgery', # biopsy
+  Kit = 'sc5'
+)
+  
+}
+
+
+
 for (i in c( 'cellbender')) {
   obj_create(
     project = 'skin',

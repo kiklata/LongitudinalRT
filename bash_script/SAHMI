@@ -1,0 +1,42 @@
+
+Rscript /home/zhepan/Software/SAHMI/functions/run_kraken.r \
+--sample P1024S1 \
+--fq1 /home/zhepan/Project/MultiOmics/data/tumor/scRNA/Rawdata/P1024S1/P1024S1_T_S1_L001_R1.fastq.gz  \
+--fq2 /home/zhepan/Project/MultiOmics/data/tumor/scRNA/Rawdata/P1024S1/P1024S1_T_S1_L001_R2.fastq.gz   \
+--out_path /home/zhepan/Project/MultiOmics/data/tumor/scRNA/Result/P1024S1/SAHMI/ \
+--Kraken2Uniq_path /home/zhepan/Software/kraken2/kraken2 \
+--kraken_database_path /home/zhepan/Reference/kraken2DB/PLUSPF   \
+--kreport2mpa_path  /home/zhepan/Software/SAHMI/functions/kreport2mpa.py \
+--paired T
+
+Rscript  /home/zhepan/Software/SAHMI/functions/extract_microbiome_reads.r \
+ --sample_name P1024S1_f1   \
+ --fq /home/zhepan/Project/MultiOmics/data/tumor/scRNA/Result/P1024S1/SAHMI/P1024S1_1.fq  \
+ --kraken_report /home/zhepan/Project/MultiOmics/data/tumor/scRNA/Result/P1024S1/SAHMI/P1024S1.kraken.report.txt \
+ --mpa_report /home/zhepan/Project/MultiOmics/data/tumor/scRNA/Result/P1024S1/SAHMI/P1024S1.kraken.report.mpa.txt \
+ --out_path /home/zhepan/Project/MultiOmics/data/tumor/scRNA/Result/P1024S1/SAHMI/
+
+Rscript  /home/zhepan/Software/SAHMI/functions/extract_microbiome_reads.r \
+ --sample_name P1024S1_f2   \
+ --fq /home/zhepan/Project/MultiOmics/data/tumor/scRNA/Result/P1024S1/SAHMI/P1024S1_2.fq  \
+ --kraken_report /home/zhepan/Project/MultiOmics/data/tumor/scRNA/Result/P1024S1/SAHMI/P1024S1.kraken.report.txt \
+ --mpa_report /home/zhepan/Project/MultiOmics/data/tumor/scRNA/Result/P1024S1/SAHMI/P1024S1.kraken.report.mpa.txt \
+ --out_path /home/zhepan/Project/MultiOmics/data/tumor/scRNA/Result/P1024S1/SAHMI/
+ 
+Rscript  /home/zhepan/Software/SAHMI/functions/extract_microbiome_output.r  \
+ --sample_name P1024S1 \
+ --output_file /home/zhepan/Project/MultiOmics/data/tumor/scRNA/Result/P1024S1/SAHMI/P1024S1.kraken.output.txt \
+ --kraken_report  /home/zhepan/Project/MultiOmics/data/tumor/scRNA/Result/P1024S1/SAHMI/P1024S1.kraken.report.txt \
+ --mpa_report  /home/zhepan/Project/MultiOmics/data/tumor/scRNA/Result/P1024S1/SAHMI/P1024S1.kraken.report.mpa.txt \
+ --out_path /home/zhepan/Project/MultiOmics/data/tumor/scRNA/Result/P1024S1/SAHMI/
+
+ 
+Rscript /home/zhepan/Software/SAHMI/functions/sckmer.r  \
+ --sample_name P1024S1 \
+ --fa1 /home/zhepan/Project/MultiOmics/data/tumor/scRNA/Result/P1024S1/SAHMI/P1024S1_f1.fa  \
+ --fa2 /home/zhepan/Project/MultiOmics/data/tumor/scRNA/Result/P1024S1/SAHMI/P1024S1_f2.fa   \
+ --microbiome_output_file /home/zhepan/Project/MultiOmics/data/tumor/scRNA/Result/P1024S1/SAHMI/P1024S1.microbiome.output.txt  \
+ --kraken_report /home/zhepan/Project/MultiOmics/data/tumor/scRNA/Result/P1024S1/SAHMI/P1024S1.kraken.report.txt  \
+ --mpa_report /home/zhepan/Project/MultiOmics/data/tumor/scRNA/Result/P1024S1/SAHMI/P1024S1.kraken.report.mpa.txt  \
+ --out_path /home/zhepan/Project/MultiOmics/data/tumor/scRNA/Result/P1024S1/SAHMI/ \
+ --cb_len 16 --umi_len 12 

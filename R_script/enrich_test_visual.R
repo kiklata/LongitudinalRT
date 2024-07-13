@@ -2,24 +2,50 @@
 library(ggpubr)
 
 # RUN scMetabolism
-curated_meta = read.delim('~/Project/MultiOmics/data/skin/res/cellbender_celltype.csv',row.names = 1,sep = ',')
+curated_meta = read.delim('~/Project/MultiOmics/data/snRNA/Object/summary/annotation/myeloid_celltype.csv',row.names = 1,sep = ',')
 scores = read.delim('~/Project/MultiOmics/data/skin/res/ssgsea_kera.txt')
 
 
-celltype = 'Keratinocyte'
-celltype_index = curated_meta[curated_meta$cl_major %in% c(celltype),] %>% rownames()
+celltype = c('Macrophage','Monocyte')
+celltype_index = curated_meta[curated_meta$myeloid_major %in% c(celltype),] %>% rownames()
 
 celltype_score = scores[celltype_index,] %>% as.data.frame()
 celltype_score$CellID = rownames(celltype_score)
 
-sub_meta = curated_meta[c('SampleID','SampleType','cl_minor','cl_subset')]
+sub_meta = curated_meta[c('SampleTimepoint','Myeloid_minor')]
 sub_meta$CellID = rownames(sub_meta)
 
 select_celltype = 'KC-Spinous-SPINK5'
 
 df = left_join(celltype_score,sub_meta, by = 'CellID') #%>% dplyr::filter(., cl_subset == select_celltype)
-df$SampleType = if_else(df$SampleType == 'H','ARD','Normal') %>% factor(., levels = c('ARD','Normal'))
+#df$SampleType = if_else(df$SampleType == 'H','ARD','Normal') %>% factor(., levels = c('ARD','Normal'))
 
+# scores by celltype---------------------
+meta_interest = 'Fatty acid elongation'
+ggplot(data = df,aes(x = Myeloid_minor, y = .data[[meta_interest]]))+
+  geom_violin(aes(fill = Myeloid_minor),width = 0.7)+
+  geom_boxplot(aes(fill = Myeloid_minor),width = 0.2, position = position_dodge(0.7),outlier.shape = NA)+
+  #scale_fill_manual(values = timepoint_color_p)+
+  labs(x = '',y = 'Score', title = meta_interest)+
+  theme_classic()+
+  NoLegend()+
+  coord_flip()+
+  theme(plot.title = element_text(hjust = 0.5),
+        title = element_text(size = 8))
+
+library(ggridges)
+ggplot(data = df,aes(x = .data[[meta_interest]], y = Myeloid_minor, fill = Myeloid_minor))+
+  geom_density_ridges()+
+  scale_fill_manual(values = minor_color_p)+
+  labs(x = 'Score',y = '', title = meta_interest)+
+  theme_classic()+
+  NoLegend()+
+  theme(plot.title = element_text(hjust = 0.5),
+        title = element_text(size = 8))
+
+
+
+# scores by sampletype ----------------------------------------------------
 limmstest = function(df,SampleType){
   require(limma)
   group <- df[['SampleType']] %>% as.factor()

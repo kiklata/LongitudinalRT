@@ -1,14 +1,14 @@
-timepoint_color_p = c('pre' = '#dbe4c7', 'post' = '#be7b92')
+timepoint_color_p = c('Pre' = '#dbe4c7', 'Post' = '#be7b92')
 
 compart_color_p = c(
-  'B cell' = "#A6CEE3", 
-  "T cell" = "#99CD91", 
-  "Endothelial"= "#B89B74",
-  "Epithelial" = "grey",
-  "Myeloid" = "#F06C45",
-  "Mast" = "#ED8F47", 
-  "PVL" = "#825D99", 
-  "CAF" = "#B15928"
+  'B cell' = "#1f77b4", 
+  "T cell" = "#b5bd61", 
+  "Endothelial"= "#279e68",
+  "Epithelial" = "#d62728",
+  "Myeloid" = "#8c564b",
+  "Mast" = "#aa40fc", 
+  "PVL" = "#e377c2", 
+  "CAF" = "#ff7f0e"
 )
 
 minor_color_p = c(

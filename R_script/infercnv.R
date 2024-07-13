@@ -1,26 +1,26 @@
 library(infercnv)
 options(scipen = 100)
 
-workdir = '~/Project/MultiOmics/data/snRNA/Object/summary/test'
+workdir = '~/Project/MultiOmics/data/tumor/scRNA/Object/summary/test'
 
-cellranger_filter <- readRDS("~/Project/MultiOmics/data/snRNA/Object/summary/cellranger_filter_count.rds")
-anno.matrix <- read.delim("~/Project/MultiOmics/data/snRNA/Object/summary/annotation/anno.tsv",sep = '\t',row.names = 1)
+cellranger_filter <- readRDS("~/Project/MultiOmics/data/tumor/scRNA/Object/summary/test/cellranger_new_anno.rds")
+#anno.matrix <- read.delim("~/Project/MultiOmics/data/snRNA/Object/summary/annotation/anno.tsv",sep = '\t',row.names = 1)
 
-cellranger_filter = AddMetaData(cellranger_filter,anno.matrix)
-samplelist = c('P1013S2','P1015S2','P1018S1')
+#cellranger_filter = AddMetaData(cellranger_filter,anno.matrix)
+samplelist = c('P1013S2','P1015S2','P1018S1','P1019S2','P1020S1')
 
 for(i in samplelist){
   
 seu = subset(cellranger_filter, SampleID == i)
 
-epi_index = colnames(seu)[seu$manual_celltype_annotation == 'Epithelial']
-normal_index = colnames(seu)[!(seu$manual_celltype_annotation %in% c('Epithelial','PVL','CAF'))] %>% sample(.,length(epi_index))
+epi_index = colnames(seu)[seu$anno == 'Epi']
+normal_index = colnames(seu)[!(seu$anno %in% c('Epi','undefined'))] %>% sample(.,length(epi_index))
 
 # ref: A single-cell and spatially resolved atlas of human breast cancers
 count = as.matrix(subset(seu, cells = c(epi_index,normal_index))[['RNA']]@counts)
 
-anno_file = anno.matrix[c(epi_index,normal_index),'manual_celltype_annotation'] %>% as.data.frame(.,row.name = c(epi_index,normal_index))
-ref_group = setdiff(names(table(anno_file[1])),'Epithelial')
+anno_file = seu@meta.data[c(epi_index,normal_index),'anno'] %>% as.data.frame(.,row.name = c(epi_index,normal_index))
+ref_group = setdiff(names(table(anno_file[1])),'Epi')
   
 if(dir.exists(file.path(workdir,'cnv', i))==F){ 
   dir.create(file.path(workdir,'cnv', i), recursive = T )}
@@ -30,16 +30,25 @@ infercnv_obj = CreateInfercnvObject(raw_counts_matrix = count,
                                     annotations_file= file.path(workdir,'cnv', i,"infercnv_anno.txt"),
                                     gene_order_file= "/home/zhepan/Reference/gencode_v32_gene_pos_gene_name.txt",
                                     ref_group_names= ref_group) 
+
 infercnv_obj = infercnv::run(infercnv_obj,
                              cutoff=0.1,  # use 1 for smart-seq, 0.1 for 10x-genomics
-                             out_dir=file.path(workdir,'cnv',i),  # dir is auto-created for storing outputs
+                             out_dir="output_dir",  # dir is auto-created for storing outputs
                              cluster_by_groups=F,   # cluster
                              denoise=T,
-                             analysis_mode="subclusters",
-                             tumor_subcluster_partition_method='random_trees',
-                             HMM=T,write_phylo = TRUE,
-                             num_threads = 8
+                             HMM=T, num_threads = 8
 )
+
+#infercnv_obj = infercnv::run(infercnv_obj,
+#                             cutoff=0.1,  # use 1 for smart-seq, 0.1 for 10x-genomics
+#                             out_dir=file.path(workdir,'cnv',i),  # dir is auto-created for storing outputs
+#                             cluster_by_groups=F,   # cluster
+#                             denoise=T,
+#                             analysis_mode="subclusters",
+#                             tumor_subcluster_partition_method='random_trees',
+#                             HMM=T,write_phylo = TRUE,
+#                             num_threads = 8
+#)
 }
 #run.final.infercnv_obj <- readRDS("~/Project/MultiOmics/data/snRNA/Object/P1013S2/cnv/run.final.infercnv_obj.rds")
 #cnv = run.final.infercnv_obj@expr.data

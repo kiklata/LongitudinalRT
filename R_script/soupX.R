@@ -1,7 +1,7 @@
 library(SoupX)
 
-paths = paste0('~/Project/MultiOmics/data/skin/',c('SKIN-A1007','SKIN-A1009',
-                                                   'SKIN-B1002','SKIN-B1007','SKIN-B1009'))
+paths = paste0('/home/zhepan/Project/MultiOmics/data/tumor/scRNA/Result/',c('P1024S2'))
+
 for (path in paths) {
   
 setwd(path)

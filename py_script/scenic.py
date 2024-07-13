@@ -20,15 +20,15 @@ def CreateLoom(h5adpath,loompath):
     lp.create( EXP_FILTER_LOOM_FNAME, adata.X.transpose(), row_attrs, col_attrs)
 
 
-dataPath = '/home/zhepan/Project/MultiOmics/data/skin/res/'
-RESULTS_FOLDERNAME = "/home/zhepan/Project/MultiOmics/data/skin/res/SCENIC"
+dataPath = '/home/zhepan/'
+RESULTS_FOLDERNAME = "/home/zhepan/scenic"
 
-SAMPLE_ID = 'cellbender_Keratinocyte_count'
+SAMPLE_ID = 'macrophage'
 
 EXP_FILTER_LOOM_FNAME = os.path.join(RESULTS_FOLDERNAME, '{}.loom'.format(SAMPLE_ID))
 expath = os.path.join(dataPath,'{}.h5ad'.format(SAMPLE_ID))
 
-#CreateLoom(h5adpath = expath, loompath = EXP_FILTER_LOOM_FNAME)
+CreateLoom(h5adpath = expath, loompath = EXP_FILTER_LOOM_FNAME)
 
 # step 1
 

@@ -106,7 +106,22 @@ for ( i in names(table(tes_l$cluster))) {
   }
 }
 
+vag_exp = AverageExpression(seu, 
+                            assays = "RNA", 
+                            features = c('CEBPB','EGR2','E2F1','JUN','BACH2','GATA3','STAT5A','STAT3'),
+                            layer = "data")
+df = vag_exp$RNA %>% as.matrix()
+colnames(df) = gsub('-S2',' Post',colnames(df))
+colnames(df) = gsub('-S1',' Pre',colnames(df))
 
+df = df[,c('TREM2-Mac Pre','Other Mac Pre','TREM2-Mac Post','Other Mac Post')]
+
+ComplexHeatmap::pheatmap(df,scale = 'row',
+         cluster_rows = F,cluster_cols = F,
+         cellwidth = 20,cellheight = 20,
+         legend_breaks = c(-1, 0, 1),angle_col = '45',
+         column_names_side = c("top")
+         )
 p2 = ggplot(tes_l, aes(x,y,fill = cluster))+
   geom_tile()+
   geom_text(aes(label = gene), family = "serif", fontface = "italic") +
